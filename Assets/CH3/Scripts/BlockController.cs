@@ -1,14 +1,15 @@
 ﻿using UnityEngine;
+using System.Collections;
+using System.Collections.Generic;
 
 public class BlockController : MonoBehaviour
 {
-    public LayerMask whatIsPlayer;
+    [HideInInspector]
+    public List<BrickType> Types = new List<BrickType>();
 
-    public GameObject brokenBlock;
+    public string typeName;
 
-    public AudioClip hitClip;
-
-    public bool canBreak;
+    public LayerMask whatIsPlayer;   
 
     private BoxCollider2D m_boxCollider2D;
 
@@ -28,15 +29,13 @@ public class BlockController : MonoBehaviour
 
             if (col2D)
             {
-                if (canBreak)
+                for (int i = 0; i < Types.Count; ++i)
                 {
-                    GameObject broken = (GameObject) Instantiate(brokenBlock, transform.position, transform.rotation);
-                    broken.transform.localScale = transform.lossyScale;
-                    Destroy(gameObject);
-                }
-                else
-                {
-                    AudioSourceController.instance.PlayOneShot(hitClip);
+                    if(typeName == Types[i].Name)
+                    {
+                        GetComponent<SpriteRenderer>().color = Types[i].HitColor;
+                        break;
+                    }
                 }
             }
         }
