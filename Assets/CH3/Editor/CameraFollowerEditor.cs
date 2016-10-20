@@ -11,10 +11,13 @@ public class CameraFollowerEditor : Editor
     
     public override void OnInspectorGUI()
     {
+        DrawDefaultInspector();
+
         m_Target = (CameraFollow)target;
 
         // Toggle(標題, 預設值)，勾選框元件
-        _isTrackingXAxis = EditorGUILayout.Toggle("Tracking X Axis", _isTrackingXAxis);
+        _isTrackingXAxis = EditorGUILayout.Toggle("Tracking X Axis", m_Target.isTrackingXAxis);
+        m_Target.isTrackingXAxis = _isTrackingXAxis;
 
         // 從 BeginDisabledGroup(Boolean) 到 EndDisabledGroup() 中間的範圍是否可以被選取
         // 取決於 BeginDisabledGroup 傳入的布林參數
@@ -38,7 +41,10 @@ public class CameraFollowerEditor : Editor
             // 在修改目標物件(Camera)的位移前，先記錄到 Undo List 中。開發者可以藉由 Undo 的功能回到 Transform 尚未位移前的狀態
             Undo.RecordObject(m_Target.transform, "Change Camera X Position");
             // 原本的目標物件(Camera)裡的 position 都要設定為 Inspector 滑桿中修改的數值
-            m_Target.transform.position = cameraPosition;
+            m_Target.transform.position = cameraPosition;            
         }
+
+        // 每一次都重畫場景中的物件(為了處理 Gizmos)
+        SceneView.RepaintAll();
     }
 }
