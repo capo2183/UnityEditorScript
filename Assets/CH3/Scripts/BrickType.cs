@@ -1,8 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-//[System.Serializable] tells unity to serialize this class if 
-//it's used in a public array or as a public variable in a component
+//如果此類別有被拿來做成 Public Array 或 Public 變數
+//[System.Serializable] 會叫 Unity 去對此類別做序列化
 [System.Serializable]
 public class BrickType
 {

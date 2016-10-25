@@ -11,6 +11,9 @@ public class BlockControllerEditor : Editor {
     {
         m_Target = (BlockController)target;
 
+        // DrawDefaultInspector() 會將原本 Inspector 上有的東西先畫出來。
+        // 這麼一來可能會造成 Inspector 中的 Types 欄位被畫兩次(Default一次，下面 Editor Script 又會在畫一次)
+        // 因此，你可以在原先 public List<BrickType> Types 的欄位前加入 [HideInInspector]，把 Default Inspector 關掉
         DrawDefaultInspector();
         DrawTypesInspector();
     }
@@ -49,8 +52,7 @@ public class BlockControllerEditor : Editor {
             if (EditorGUI.EndChangeCheck())
             {
                 // 在修改之前建立 Undo/Redo 記錄步驟
-                Undo.RecordObject(m_Target.transform.gameObject, "Modify Types");
-                Debug.LogError("[RecordObject] Modify Types");
+                Undo.RecordObject(m_Target, "Modify Types");
 
                 m_Target.Types[index].Name = newName;
                 m_Target.Types[index].HitColor = newColor;
@@ -75,8 +77,6 @@ public class BlockControllerEditor : Editor {
             }
         }
         GUILayout.EndHorizontal();
-
-        Undo.FlushUndoRecordObjects();
     }
 
     void DrawAddTypeButton()
@@ -84,8 +84,6 @@ public class BlockControllerEditor : Editor {
         if (GUILayout.Button("Add new State", GUILayout.Height(30)))
         {
             Undo.RecordObject(m_Target, "Add new Type");
-
-            Debug.LogError("[RecordObject] Add new Type");
 
             m_Target.Types.Add(new BrickType { Name = "New State" });
             EditorUtility.SetDirty(m_Target);
