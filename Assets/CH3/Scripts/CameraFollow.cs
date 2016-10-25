@@ -70,7 +70,7 @@ public class CameraFollow : MonoBehaviour
         transform.position = new Vector3(targetX, targetY, transform.position.z);
     }
 
-    void OnDrawGizmos()
+    void OnDrawGizmosSelected()
     {
         Camera cam = Camera.main;
         float cHeight = 2f * cam.orthographicSize;
